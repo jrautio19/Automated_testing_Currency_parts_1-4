@@ -1,9 +1,8 @@
-import { describe,expect, test,vi } from "vitest"
+import { describe, expect, test, vi } from "vitest"
 import { convertAmount } from "../controllers/currencyController"
+import * as currencyService from "../services/currencyService"
 
-vi.mock('../services/currencyService', () => ({
-    convert: vi.fn().mockResolvedValue({ amount: 9 })
-}))
+vi.mock('../services/currencyService')
 
 const createMockResponse = () => {
     const res: any = {}
@@ -16,6 +15,8 @@ describe('CurrencyController.convertAmount',() => {
     test('Return conversion with valid request', async () => {
         const req: any = { body: { from:'EUR',to: 'SEK',amount: 10}}
         const res = createMockResponse()
+        const payload = { amount: 9}
+        vi.mocked(currencyService.convert).mockResolvedValue(payload)
 
         await convertAmount(req, res)
 
